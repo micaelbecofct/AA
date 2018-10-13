@@ -67,7 +67,34 @@ def MCNmar(PredA, PredB,y):
     NTbFa = sum(TrueB*FalseA)
     return ((abs(NTaFb-NTbFa)-1)**2)*1.0/(NTaFb+NTbFa)
 
+def calc_fold(feats, X,Y, train_ix,valid_ix,C=1e12):
+    """return error for train and validation sets"""
+    reg = LogisticRegression(C=C, tol=1e-10)
+    reg.fit(X[train_ix,:feats],Y[train_ix])
+    prob = reg.predict_proba(X[:,:feats])[:,1]    
+    squares = (prob-Y)**2
+    return np.mean(squares[train_ix]),np.mean(squares[valid_ix])
+
 def Logistic(Kf, X_r, Y_r, X_t, Y_t):
+    C=1
+    folds = 5;
+    errs = []
+    """Generate folds and loop"""
+    for feats in range(2,17):
+        tr_err=va_err=0
+        for tr_ix, va_ix in Kf.split(Y_r, Y_r):  #Y_r vetor de classes para treino
+            r,v = calc_fold(feats, X_r, Y_r, tr_ix, va_ix, C=C )
+            tr_err += r
+            va_err += v
+        print (feats,':',tr_err/folds, va_err/folds)
+        errs.append((tr_err/folds,va_err/folds))
+    errs = np.array(errs)
+    fig = plt.figure(figsize=(8,8),frameon=False)
+    plt.plot(range(2,17),errs[:,0],'-b', linewidth= 3)
+    plt.plot(range(2,17),errs[:,1],'-r', linewidth= 3)
+    fig.savefig('p_3.png', dpi=300, bbox_inches = 'tight')
+    plt.show()
+    plt.close()
     #...LogisticRegression com base no Knn
     
     
