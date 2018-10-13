@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from math import log
 from sklearn.cross_validation import StratifiedKFold
-from sklearn.model_selection import StratifiedKFold as skf
 from sklearn.cross_validation import cross_val_score
 from sklearn.cross_validation import train_test_split
 from sklearn.utils import shuffle
@@ -68,34 +67,25 @@ def MCNmar(PredA, PredB,y):
     NTbFa = sum(TrueB*FalseA)
     return ((abs(NTaFb-NTbFa)-1)**2)*1.0/(NTaFb+NTbFa)
 
-def calc_fold(feats, X,Y, train_ix,valid_ix,C=1e12):
+def calc_fold(X,Y, Kf,C=1e12):
     """return error for train and validation sets"""
     reg = LogisticRegression(C=C, tol=1e-10)
-    reg.fit(X[train_ix,:feats],Y[train_ix])
-    prob = reg.predict_proba(X[:,:feats])[:,1]    
-    squares = (prob-Y)**2
-    return np.mean(squares[train_ix]),np.mean(squares[valid_ix])
+    scores = cross_val_score(reg, X, Y,cv=Kf)
+    va_err = 1-np.mean(scores)
+    return va_err
 
 def Logistic(Kf, X_r, Y_r, X_t, Y_t):
     best_C=1
-    feats=4
-    folds = 5
-    kf = skf(n_splits=folds)
     errs = []
     C=1
     Cs=[]
     best_va= 10000
     """Generate folds and loop"""
     for ic in range(20):
-        
-        tr_err=va_err=0
-        for tr_ix, va_ix in kf.split(Y_r, Y_r):  #Y_r vetor de classes para treino
-            r,v = calc_fold(feats, X_r, Y_r, tr_ix, va_ix, C=C )
-            tr_err += r
-            va_err += v
-        if va_err/folds <= best_va:
-            best_va = va_err/folds; best_C = C
-        errs.append(va_err/folds)
+        va_err = calc_fold(X_r, Y_r, Kf,C=C )
+        if va_err <= best_va:
+            best_va = va_err; best_C = C
+        errs.append(va_err)
         Cs.append(log(C))
         C*=2
     errs = np.array(errs)
@@ -105,7 +95,7 @@ def Logistic(Kf, X_r, Y_r, X_t, Y_t):
     fig.savefig('p_3.png', dpi=300, bbox_inches = 'tight')
     plt.show()
     plt.close()
-    reg=LogisticRegression(C=best_C, tol=1e-10); reg.fit(X_r[:feats], Y_r[:feats])
+    reg=LogisticRegression(C=best_C, tol=1e-10); reg.fit(X_r, Y_r)
     return 1-reg.score(X_t, Y_t), best_C, reg.predict(X_t)
     
     
