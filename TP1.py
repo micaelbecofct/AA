@@ -15,7 +15,7 @@ from sklearn.cross_validation import StratifiedKFold
 from sklearn.cross_validation import cross_val_score
 from sklearn.cross_validation import train_test_split
 from sklearn.utils import shuffle
-
+from sklearn.metrics import accuracy_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neighbors.kde import KernelDensity
 
@@ -38,8 +38,15 @@ def compare(filename): #filename vai ser Tp1_data.csv
     print("KnnErr, bestN", KnnErr, bestN)
     LogScore, bestC, LogPred = Logistic(Kf, X_r, Y_r, X_t, Y_t)
     print("LogisticScore, bestC", LogScore, bestC)
-    #BASE ...
-    MCNmarKnnprog=MCNmar(KnnPred, LogPred, Y_t) #(|e01-e10|-1)²/e01+e10
+    NBScore, bestBandwidth, NBPred=NaiveBayes(Kf, X_r, Y_r, X_t, Y_t)
+    print("NBScore, bestBandwidth", NBScore, bestBandwidth)
+    MCNmarKnn_Log=MCNmar(KnnPred, LogPred, Y_t) #(|e01-e10|-1)²/e01+e10
+    MCNmarNB_Log=MCNmar(NBPred, LogPred, Y_t)
+    MCNmarNB_Knn=MCNmar(NBPred, KnnPred, Y_t)
+    print("MCNmarKnn_Log", MCNmarKnn_Log)
+    print("MCNmarKnn_Log", MCNmarNB_Log)
+    print("MCNmarKnn_Log", MCNmarNB_Knn)
+      
     
 def Knn(Kf, X_r, Y_r, X_t, Y_t):
     N=1; Ns=[]; lowest=10000 ; errs=[]
@@ -98,6 +105,22 @@ def Logistic(Kf, X_r, Y_r, X_t, Y_t):
     reg=LogisticRegression(C=best_C, tol=1e-10); reg.fit(X_r, Y_r)
     return 1-reg.score(X_t, Y_t), best_C, reg.predict(X_t)
     
-    
-    
+def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
+    best_bandwidth=0.01
+    lowest=10000 
+    errs=[]
+    for bandwidth in range(1,100,2):
+        reg=KernelDensity(kernel='gaussian', bandwidth=bandwidth/100)
+        acc_score = accuracy_score(Y_t, reg.predict(X_t), normalize=False)
+        if acc_score < lowest:
+            lowest= acc_score; best_bandwidth = bandwidth
+        errs.append(acc_score)
+    errs = np.array(errs)
+    plt.figure(figsize=(8,8),frameon=False)
+    plt.plot(range(1,100,2), errs,'-',linewidth=3)
+    plt.show()
+    plt.close()
+    reg=KernelDensity(kernel='gaussian', bandwidth=best_bandwidth/100)
+    return 1-reg.score(X_t, Y_t), best_bandwidth/100, reg.predict(X_t)
+        
 #implementar Logistic, Kneighborns
