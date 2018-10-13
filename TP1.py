@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 
 from sklearn.cross_validation import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold as skf
 from sklearn.cross_validation import cross_val_score
 from sklearn.cross_validation import train_test_split
 from sklearn.utils import shuffle
@@ -30,8 +31,8 @@ def get_data(filename):
     return Xs, Ys
     
 def compare(filename): #filename vai ser Tp1_data.csv
-    Xs, Ys = get_data(Filename)
-    X_r, X_t, Y_r, Y_t = train_test_split(Xs, Ys, test_size = 0.33, Stratify = Ys)
+    Xs, Ys = get_data(filename)
+    X_r, X_t, Y_r, Y_t = train_test_split(Xs, Ys, test_size = 0.33, stratify = Ys)
     folds = 5
     Kf = StratifiedKFold(Y_r, n_folds = folds)
     KnnErr, bestN, KnnPred = Knn(Kf, X_r, Y_r, X_t, Y_t) #KnnPred AA-07
@@ -39,7 +40,7 @@ def compare(filename): #filename vai ser Tp1_data.csv
     LogScore, LogPred = Logistic(Kf, X_r, Y_r, X_t, Y_t)
     print("LogisticScore", LogScore)
     #BASE ...
-    MCNmarKnnprog=MCNmar(KnnPred, LogPred, Y_t) #(|e01-e10|-1)²/e01+e10
+    #MCNmarKnnprog=MCNmar(KnnPred, LogPred, Y_t) #(|e01-e10|-1)²/e01+e10
     
 def Knn(Kf, X_r, Y_r, X_t, Y_t):
     N=1; Ns=[]; lowest=10000 ; errs=[]
@@ -52,7 +53,7 @@ def Knn(Kf, X_r, Y_r, X_t, Y_t):
         errs.append(va_err); Ns.append(N); N=N+2
     errs = np.array(errs)
     plt.figure(figsize=(8,8),frameon=False)
-    plt.plot(Ns, errs,'-',linewigth=3)
+    plt.plot(Ns, errs,'-',linewidth=3)
     plt.show()
     plt.close()
     reg=KNeighborsClassifier(Best_n); reg.fit(X_r, Y_r)
@@ -80,9 +81,10 @@ def Logistic(Kf, X_r, Y_r, X_t, Y_t):
     best_feats=2
     best_va= 10000
     folds = 5
-    kf = StratifiedKFold(n_splits=folds)
+    kf = skf(n_splits=folds)
     errs = []
     C=1
+    Cs=[]
     """Generate folds and loop"""
     for ic in range(20):
         best_va_c= 10000
@@ -96,12 +98,13 @@ def Logistic(Kf, X_r, Y_r, X_t, Y_t):
                 best_va_c = va_err/folds
                 if va_err/folds <= best_va:
                     best_va = va_err/folds; best_feats=feats ; best_C = C
-            print (feats,':',tr_err/folds, va_err/folds)
         errs.append(best_va_c)
+        Cs.append(C)
         C*=2
     errs = np.array(errs)
+    Cs = np.array(Cs)
     fig = plt.figure(figsize=(8,8),frameon=False)
-    plt.plot(2**range(20),errs[:],'-b', linewidth= 3)
+    plt.plot(range(1048576),errs[:],'-b', linewidth= 3)
     fig.savefig('p_3.png', dpi=300, bbox_inches = 'tight')
     plt.show()
     plt.close()
