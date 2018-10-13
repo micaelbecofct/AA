@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from sklearn.linear_model import LogisticRegression
-
+from math import log
 from sklearn.cross_validation import StratifiedKFold
 from sklearn.model_selection import StratifiedKFold as skf
 from sklearn.cross_validation import cross_val_score
@@ -99,12 +99,12 @@ def Logistic(Kf, X_r, Y_r, X_t, Y_t):
                 if va_err/folds <= best_va:
                     best_va = va_err/folds; best_feats=feats ; best_C = C
         errs.append(best_va_c)
-        Cs.append(C)
+        Cs.append(log(C))
         C*=2
     errs = np.array(errs)
     Cs = np.array(Cs)
     fig = plt.figure(figsize=(8,8),frameon=False)
-    plt.plot(range(1048576),errs[:],'-b', linewidth= 3)
+    plt.plot(Cs,errs)
     fig.savefig('p_3.png', dpi=300, bbox_inches = 'tight')
     plt.show()
     plt.close()
