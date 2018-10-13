@@ -80,7 +80,7 @@ def Logistic(Kf, X_r, Y_r, X_t, Y_t):
     best_feats=2
     best_va= 10000
     folds = 5
-    
+    kf = StratifiedKFold(n_splits=folds)
     errs = []
     C=1
     """Generate folds and loop"""
@@ -88,7 +88,7 @@ def Logistic(Kf, X_r, Y_r, X_t, Y_t):
         best_va_c= 10000
         for feats in range(2,17):
             tr_err=va_err=0
-            for tr_ix, va_ix in Kf.split(Y_r, Y_r):  #Y_r vetor de classes para treino
+            for tr_ix, va_ix in kf.split(Y_r, Y_r):  #Y_r vetor de classes para treino
                 r,v = calc_fold(feats, X_r, Y_r, tr_ix, va_ix, C=C )
                 tr_err += r
                 va_err += v
@@ -105,7 +105,7 @@ def Logistic(Kf, X_r, Y_r, X_t, Y_t):
     fig.savefig('p_3.png', dpi=300, bbox_inches = 'tight')
     plt.show()
     plt.close()
-    reg=LogisticRegression(C=best_C, tol=1e-10); reg.fit(X_r, Y_r)
+    reg=LogisticRegression(C=best_C, tol=1e-10); reg.fit(X_r[:best_feats], Y_r[:best_feats])
     return 
     #...LogisticRegression com base no Knn
     
