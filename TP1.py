@@ -80,28 +80,33 @@ def Logistic(Kf, X_r, Y_r, X_t, Y_t):
     best_feats=2
     best_va= 10000
     folds = 5
+    
     errs = []
     C=1
     """Generate folds and loop"""
     for ic in range(20):
+        best_va_c= 10000
         for feats in range(2,17):
             tr_err=va_err=0
             for tr_ix, va_ix in Kf.split(Y_r, Y_r):  #Y_r vetor de classes para treino
                 r,v = calc_fold(feats, X_r, Y_r, tr_ix, va_ix, C=C )
                 tr_err += r
                 va_err += v
-            if va_err/folds <= best_va:
-                best_va = va_err/folds; best_feats=feats ; best_C = C
+            if va_err/folds <= best_va_c:
+                best_va_c = va_err/folds
+                if va_err/folds <= best_va:
+                    best_va = va_err/folds; best_feats=feats ; best_C = C
             print (feats,':',tr_err/folds, va_err/folds)
-            errs.append((tr_err/folds,va_err/folds))
-        errs = np.array(errs)
+        errs.append(best_va_c)
         C*=2
+    errs = np.array(errs)
     fig = plt.figure(figsize=(8,8),frameon=False)
-    plt.plot(range(2,17),errs[:,0],'-b', linewidth= 3)
-    plt.plot(range(2,17),errs[:,1],'-r', linewidth= 3)
+    plt.plot(2**range(20),errs[:],'-b', linewidth= 3)
     fig.savefig('p_3.png', dpi=300, bbox_inches = 'tight')
     plt.show()
     plt.close()
+    reg=LogisticRegression(C=best_C, tol=1e-10); reg.fit(X_r, Y_r)
+    return 
     #...LogisticRegression com base no Knn
     
     
