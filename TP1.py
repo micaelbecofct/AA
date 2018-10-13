@@ -78,27 +78,24 @@ def calc_fold(feats, X,Y, train_ix,valid_ix,C=1e12):
 
 def Logistic(Kf, X_r, Y_r, X_t, Y_t):
     best_C=1
-    best_feats=2
-    best_va= 10000
+    feats=4
     folds = 5
     kf = skf(n_splits=folds)
     errs = []
     C=1
     Cs=[]
+    best_va= 10000
     """Generate folds and loop"""
     for ic in range(20):
-        best_va_c= 10000
-        for feats in range(2,17):
-            tr_err=va_err=0
-            for tr_ix, va_ix in kf.split(Y_r, Y_r):  #Y_r vetor de classes para treino
-                r,v = calc_fold(feats, X_r, Y_r, tr_ix, va_ix, C=C )
-                tr_err += r
-                va_err += v
-            if va_err/folds <= best_va_c:
-                best_va_c = va_err/folds
-                if va_err/folds <= best_va:
-                    best_va = va_err/folds; best_feats=feats ; best_C = C
-        errs.append(best_va_c)
+        
+        tr_err=va_err=0
+        for tr_ix, va_ix in kf.split(Y_r, Y_r):  #Y_r vetor de classes para treino
+            r,v = calc_fold(feats, X_r, Y_r, tr_ix, va_ix, C=C )
+            tr_err += r
+            va_err += v
+        if va_err/folds <= best_va:
+            best_va = va_err/folds; best_C = C
+        errs.append(va_err/folds)
         Cs.append(log(C))
         C*=2
     errs = np.array(errs)
@@ -108,7 +105,7 @@ def Logistic(Kf, X_r, Y_r, X_t, Y_t):
     fig.savefig('p_3.png', dpi=300, bbox_inches = 'tight')
     plt.show()
     plt.close()
-    reg=LogisticRegression(C=best_C, tol=1e-10); reg.fit(X_r[:best_feats], Y_r[:best_feats])
+    reg=LogisticRegression(C=best_C, tol=1e-10); reg.fit(X_r[:feats], Y_r[:feats])
     return 1-reg.score(X_t, Y_t), best_C, reg.predict(X_t)
     
     
