@@ -37,10 +37,10 @@ def compare(filename): #filename vai ser Tp1_data.csv
     Kf = StratifiedKFold(Y_r, n_folds = folds)
     KnnErr, bestN, KnnPred = Knn(Kf, X_r, Y_r, X_t, Y_t) #KnnPred AA-07
     print("KnnErr, bestN", KnnErr, bestN)
-    LogScore, LogPred = Logistic(Kf, X_r, Y_r, X_t, Y_t)
-    print("LogisticScore", LogScore)
+    LogScore, bestC, LogPred = Logistic(Kf, X_r, Y_r, X_t, Y_t)
+    print("LogisticScore, bestC", LogScore, bestC)
     #BASE ...
-    #MCNmarKnnprog=MCNmar(KnnPred, LogPred, Y_t) #(|e01-e10|-1)²/e01+e10
+    MCNmarKnnprog=MCNmar(KnnPred, LogPred, Y_t) #(|e01-e10|-1)²/e01+e10
     
 def Knn(Kf, X_r, Y_r, X_t, Y_t):
     N=1; Ns=[]; lowest=10000 ; errs=[]
@@ -49,7 +49,7 @@ def Knn(Kf, X_r, Y_r, X_t, Y_t):
         scores = cross_val_score(reg, X_r, Y_r,cv=Kf)
         va_err = 1-np.mean(scores)
         if va_err < lowest:
-            lowest= va_err; Best_n =N
+            lowest= va_err; Best_n = N
         errs.append(va_err); Ns.append(N); N=N+2
     errs = np.array(errs)
     plt.figure(figsize=(8,8),frameon=False)
@@ -109,8 +109,7 @@ def Logistic(Kf, X_r, Y_r, X_t, Y_t):
     plt.show()
     plt.close()
     reg=LogisticRegression(C=best_C, tol=1e-10); reg.fit(X_r[:best_feats], Y_r[:best_feats])
-    return 
-    #...LogisticRegression com base no Knn
+    return 1-reg.score(X_t, Y_t), best_C, reg.predict(X_t)
     
     
     
