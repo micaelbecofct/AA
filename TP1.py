@@ -76,19 +76,26 @@ def calc_fold(feats, X,Y, train_ix,valid_ix,C=1e12):
     return np.mean(squares[train_ix]),np.mean(squares[valid_ix])
 
 def Logistic(Kf, X_r, Y_r, X_t, Y_t):
-    C=1
-    folds = 5;
+    best_C=1
+    best_feats=2
+    best_va= 10000
+    folds = 5
     errs = []
+    C=1
     """Generate folds and loop"""
-    for feats in range(2,17):
-        tr_err=va_err=0
-        for tr_ix, va_ix in Kf.split(Y_r, Y_r):  #Y_r vetor de classes para treino
-            r,v = calc_fold(feats, X_r, Y_r, tr_ix, va_ix, C=C )
-            tr_err += r
-            va_err += v
-        print (feats,':',tr_err/folds, va_err/folds)
-        errs.append((tr_err/folds,va_err/folds))
-    errs = np.array(errs)
+    for ic in range(20):
+        for feats in range(2,17):
+            tr_err=va_err=0
+            for tr_ix, va_ix in Kf.split(Y_r, Y_r):  #Y_r vetor de classes para treino
+                r,v = calc_fold(feats, X_r, Y_r, tr_ix, va_ix, C=C )
+                tr_err += r
+                va_err += v
+            if va_err/folds <= best_va:
+                best_va = va_err/folds; best_feats=feats ; best_C = C
+            print (feats,':',tr_err/folds, va_err/folds)
+            errs.append((tr_err/folds,va_err/folds))
+        errs = np.array(errs)
+        C*=2
     fig = plt.figure(figsize=(8,8),frameon=False)
     plt.plot(range(2,17),errs[:,0],'-b', linewidth= 3)
     plt.plot(range(2,17),errs[:,1],'-r', linewidth= 3)
