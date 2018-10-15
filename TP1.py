@@ -123,7 +123,7 @@ def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
             lowest= acc_score; best_bandwidth = bandwidth
         errs.append(acc_score)
     errs = np.array(errs)
-    plt.figure(figsize=(8,8),frameon=False)
+    plt.figure(figsize=(8,8), frameon=False)
     plt.plot(range(1,100,2), errs,'-',linewidth=3)
     plt.show()
     plt.close()
