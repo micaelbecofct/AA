@@ -15,7 +15,7 @@ from sklearn.cross_validation import StratifiedKFold
 from sklearn.cross_validation import cross_val_score
 from sklearn.cross_validation import train_test_split
 from sklearn.utils import shuffle
-from sklearn.metrics import accuracy_score
+#from sklearn.metrics import accuracy_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neighbors.kde import KernelDensity
 
@@ -113,8 +113,8 @@ def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
     for bandwidth in range(1,100,2):
         reg = KernelDensity(kernel = 'gaussian', bandwidth = bandwidth/100)
         #estou a pensar que X_r[Y_r==0] sao os X_r em que Y_r == 0
-        real_log = np.log(float(X_r[Y_r==0])/X_r.shape[0])#Y=0 p/notas reais
-        fake_log = np.log(float(X_r[Y_r==1])/X_r.shape[0])#Y=1 p/notas falsas
+        real_log = np.log(X_r[Y_r==0]/X_r.shape[0])#Y=0 p/notas reais
+        fake_log = np.log(X_r[Y_r==1]/X_r.shape[0])#Y=1 p/notas falsas
         c_real = NBClassifier(reg.fit(X_r[Y_r==0]), real_log,
                               reg.fit(X_r[Y_r==1]), fake_log, X_t[Y_t==0])
         c_fake = NBClassifier(reg.fit(X_r[Y_r==0]), real_log,
@@ -136,13 +136,13 @@ def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
 
 
 def NBClassifier(real_class, real_log, fake_class, fake_log, feat_mat):
-    classes = np.zeros(feat_mat.shape[0])
-    for row in range(feat_mat.shape[0]):
-        real_sum = real_log
+    classes = np.zeros(feat_mat.shape[0])#classes sao os pontos de teste mas tudo a zeros
+    for row in range(feat_mat.shape[0]):#para cada linha dos pontos de teste
+        real_sum = real_log#somatorio comeca com isto
         fake_sum = fake_log
-        for column in range(feat_mat.shape[1]):
-            real_sum = real_sum + real_class[column][int(feat_mat[row,column])]
-            fake_sum = fake_sum + fake_class[column][int(feat_mat[row,column])]
+        for column in range(feat_mat.shape[1]): #para cada coluna nos pontos de teste
+            real_sum += real_class[column][int(feat_mat[row,column])]
+            fake_sum += fake_class[column][int(feat_mat[row,column])]
         if real_sum < fake_sum:
             classes[row] = 1
     return 0
