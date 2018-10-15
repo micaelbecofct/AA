@@ -116,13 +116,16 @@ def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
         real_log = np.log(float(X_r[Y_r==0])/X_r.shape[0])#Y=0 p/notas reais
         fake_log = np.log(float(X_r[Y_r==1])/X_r.shape[0])#Y=1 p/notas falsas
         c_real = NBClassifier(reg.fit(X_r[Y_r==0]), real_log,
-                              reg-fit(X_r[Y_r==1]), fake_log, X_t[Y_t==0])
+                              reg.fit(X_r[Y_r==1]), fake_log, X_t[Y_t==0])
         c_fake = NBClassifier(reg.fit(X_r[Y_r==0]), real_log,
-                              reg-fit(X_r[Y_r==1]), fake_log, X_t[Y_t==1])
-        acc_score = accuracy_score(Y_t, reg.predict(X_t), normalize=False)
-        if acc_score < lowest:
-            lowest= acc_score; best_bandwidth = bandwidth
-        errs.append(acc_score)
+                              reg.fit(X_r[Y_r==1]), fake_log, X_t[Y_t==1])
+        #vou calcular a acc_score como nas teoricas e nao com o accuracy_score
+        #chamo error_rate ao acc_score
+        errors = sum(c_real)+sum(1-c_fake)
+        error_rate=float(errors)/(len(c_real)+len(c_fake))*100#percent de erros
+        if error_rate < lowest:
+            lowest = error_rate; best_bandwidth = bandwidth
+        errs.append(error_rate)
     errs = np.array(errs)
     plt.figure(figsize=(8,8),frameon=False)
     plt.plot(range(1,100,2), errs,'-',linewidth=3)
