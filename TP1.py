@@ -51,7 +51,7 @@ def compare(filename): #filename vai ser Tp1_data.csv
 def Knn(Kf, X_r, Y_r, X_t, Y_t):
     N=1; Ns=[]; lowest=10000 ; errs=[]
     for ix in range (20): # 40/2 only odd values
-        reg=KNeighborsClassifier(N) #Para o logistic aqui é LogisticRegression mas umas alteracoes
+        reg=KNeighborsClassifier(N) #Para o logistic aqui e LogisticRegression mas umas alteracoes
         scores = cross_val_score(reg, X_r, Y_r,cv=Kf)
         va_err = 1-np.mean(scores)
         if va_err < lowest:
@@ -110,7 +110,14 @@ def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
     lowest=10000 
     errs=[]
     for bandwidth in range(1,100,2):
-        reg=KernelDensity(kernel='gaussian', bandwidth=bandwidth/100)
+        reg = KernelDensity(kernel = 'gaussian', bandwidth = bandwidth/100)
+        """
+        e_log = np.log(float(e_train.shape[0])/tot_len) #isto mas com pontos de classe 0
+        p_log = np.log(float(p_train.shape[0])/tot_len) #isto mas com pontos de classe 1
+        c_e = classify(e_hists,e_log,p_hists,p_log,e_test) #classify devolve classe prevista
+        c_p = classify(e_hists,e_log,p_hists,p_log,p_test)
+        """
+        #em vez de reg.predict devia ser uma especie de classify das teoricas
         acc_score = accuracy_score(Y_t, reg.predict(X_t), normalize=False)
         if acc_score < lowest:
             lowest= acc_score; best_bandwidth = bandwidth
