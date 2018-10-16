@@ -137,15 +137,16 @@ def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
 
 def NBClassifier(real_class, real_log, fake_class, fake_log, feat_mat):
     classes = np.zeros(feat_mat.shape[0])#classes sao os pontos de teste mas tudo a zeros
-    for row in range(feat_mat.shape[0]):#para cada linha dos pontos de teste
-        real_sum = real_log#somatorio comeca com isto
+    for row in range(feat_mat.shape[0]):#para cada x 
+        real_sum = real_log
         fake_sum = fake_log
-        for column in range(feat_mat.shape[1]): #para cada coluna nos pontos de teste
+        for column in range(feat_mat.shape[1]):#usa este for para ver prob de cair em cada classe
             real_sum += real_class[column][int(feat_mat[row,column])]
             fake_sum += fake_class[column][int(feat_mat[row,column])]
-        if real_sum < fake_sum:
-            classes[row] = 1
-    return 0
+        if real_sum < fake_sum:#se for mais provavel ser uma nota falsa
+            classes[row] = 1#aqui sera prevista como falsa
+            #e zero caso contrario, visto que foi preenchido com zeros
+    return classes
 
     
     
