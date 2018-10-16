@@ -24,16 +24,17 @@ def separateByClass(X, Y):
 	return separated
 
 def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
-    separated = separateByClass(X_r[:5],Y_r[:5]);
-    print(X_r[:5])                            
-    print(Y_r[:5])
-    real = separated[0]
-    fake = separated[1]
-    best_bandwidth=0.01
-    bandwidth = 0.2
+    separated_r = separateByClass(X_r,Y_r);
+    separated_t = separateByClass(X_t,Y_t);
+    real = separated_r[0]
+    fake = separated_r[1]
+    best_bandwidth=1
+    bandwidth = 20
     reg=KernelDensity(kernel='gaussian', bandwidth=bandwidth/100)
-    reg.fit(real)
-     print(Y_r[:5])
+    y = np.zeros(len(real))
+    print(reg.score_samples(separated_t[0]))
+    cross_val_score(reg, real, y, cv=Kf)
+    
     """
     best_bandwidth=0.01 #width of the kernel
     lowest=10000 
