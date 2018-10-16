@@ -17,14 +17,14 @@ from sklearn.cross_validation import StratifiedKFold
 from sklearn.cross_validation import cross_val_score
 from sklearn.cross_validation import train_test_split
 from sklearn.utils import shuffle
-from sklearn.metrics import accuracy_score
+#from sklearn.metrics import accuracy_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neighbors.kde import KernelDensity
 def get_data(filename):
     mat = np.loadtxt(filename, delimiter = ',')
     
     data = shuffle(mat)
-    Ys = data[:,-1]
+    Ys = data[:,-1] #-1 e a ultima coluna
     Xs = data[:,:-1]
     means = np.mean(Xs,axis=0) #media
     stdevs = np.std(Xs,axis=0) #desvio padrao
@@ -56,13 +56,27 @@ def compare(filename): #filename vai ser Tp1_data.csv
     #print("MCNmarKnn_Log", MCNmarNB_Knn)
       
     
-
-def MCNmar(PredA, PredB,y):
-    TrueA = PredA==y 
-    FalseB = PredB !=y
-    TrueB = PredB == y
-    FalseA = PredA != y
-    NTaFb = sum(TrueA*FalseB)
-    NTbFa = sum(TrueB*FalseA)
-    return ((abs(NTaFb-NTbFa)-1)**2)*1.0/(NTaFb+NTbFa)
-
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+>>>>>>> 4570b34cf7a3580897eda3ea14dab8180d480271
