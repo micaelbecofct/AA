@@ -14,7 +14,21 @@ from sklearn.cross_validation import cross_val_score
 from sklearn.metrics import accuracy_score
 from sklearn.neighbors.kde import KernelDensity
 
+
+def separateByClass(X, Y):
+	separated = {}
+	for i in range(len(X)):
+		if (Y[i] not in separated):
+			separated[Y[i]] = []
+		separated[Y[i]].append(X[i])
+	return separated
+
 def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
+    separeted = separateByClass(X_r[:5],Y_r[:5]);
+    print(X_r[:5])                            
+    print(Y_r[:5])
+    print(separeted[0])
+    """
     best_bandwidth=0.01 #width of the kernel
     lowest=10000 
     errs=[]
@@ -31,6 +45,8 @@ def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
     plt.close()
     reg=KernelDensity(kernel='gaussian', bandwidth=best_bandwidth/100); reg.fit(X_r,Y_r)
     return 1-reg.score(X_t, Y_t), best_bandwidth/100
+   """
     return 0, 0
+
         
 #implementar Logistic, Kneighborns
