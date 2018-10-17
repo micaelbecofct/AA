@@ -43,13 +43,12 @@ def compare(filename): #filename vai ser Tp1_data.csv
     if nb:
         NBScore, bestBandwidth, NBPred=  NaiveBayes(Kf, X_r, Y_r, X_t, Y_t)
         print("NBScore, bestBandwidth", NBScore, bestBandwidth)
-    return NBScore
-    #MCNmarKnn_Log=MCNmar(KnnPred, LogPred, Y_t) #(|e01-e10|-1)²/e01+e10
-    #MCNmarNB_Log=MCNmar(NBPred, LogPred, Y_t)
-    #MCNmarNB_Knn=MCNmar(NBPred, KnnPred, Y_t)
-    #print("MCNmarKnn_Log", MCNmarKnn_Log)
-    #print("MCNmarKnn_Log", MCNmarNB_Log)
-    #print("MCNmarKnn_Log", MCNmarNB_Knn)
+    MCNmarKnn_Log=MCNmar(KnnPred, LogPred, Y_t) #(|e01-e10|-1)²/e01+e10
+    MCNmarNB_Log=MCNmar(NBPred, LogPred, Y_t)
+    MCNmarNB_Knn=MCNmar(NBPred, KnnPred, Y_t)
+    print("MCNmarKnn_Log", MCNmarKnn_Log)
+    print("MCNmarKnn_Log", MCNmarNB_Log)
+    print("MCNmarKnn_Log", MCNmarNB_Knn)
       
     
     
