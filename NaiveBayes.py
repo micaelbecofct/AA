@@ -13,6 +13,7 @@ from math import log
 from sklearn.cross_validation import cross_val_score
 from sklearn.metrics import accuracy_score
 from sklearn.neighbors.kde import KernelDensity
+from sklearn.model_selection import GridSearchCV
 
 
 def separateByClass(X, Y):
@@ -23,17 +24,36 @@ def separateByClass(X, Y):
 		separated[Y[i]].append(X[i])
 	return separated
 
+def classify(real_r,real_log,fake_r,fake_log,feat_mat, reg):
+    classes = np.zeros(len(feat_mat))
+    for row in range(len(feat_mat)):
+        reg.fit(real_r)
+        real_sum = real_log + reg.score(feat_mat)
+        reg.fit(fake_r)
+        fake_sum = fake_log + reg.score(feat_mat)
+        if(real_sum < fake_sum):
+            classes[row]= 1
+    return classes
+        
 def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
     separated_r = separateByClass(X_r,Y_r);
     separated_t = separateByClass(X_t,Y_t);
-    real = separated_r[0]
-    fake = separated_r[1]
+    real_r = separated_r[0]
+    fake_r = separated_r[1]
+    real_t = separated_t[0]
+    fake_t = separated_t[1]
     best_bandwidth=1
+    best_score = 0
     bandwidth = 20
-    reg=KernelDensity(kernel='gaussian', bandwidth=bandwidth/100)
-    y = np.zeros(len(real))
-    print(reg.score_samples(separated_t[0]))
-    cross_val_score(reg, real, y, cv=Kf)
+    tot_len = len(real_r)+len(fake_r)
+    real_log = np.log(len(real_r)/tot_len)
+    fake_log = np.log(len(fake_r)/tot_len)
+    print(real_r[:])
+    for band in range(1,100,2):
+         reg=KernelDensity(kernel='gaussian', bandwidth=band/100)
+         #c_real = classify(real_r,real_log,fake_r, fake_log, real_t,reg)
+         #c_fake = classify(real_r,real_log,fake_r, fake_log, fake_t,reg)
+         #errors = sum(c_real)+sum(1-c_fake)
     
     """
     best_bandwidth=0.01 #width of the kernel
