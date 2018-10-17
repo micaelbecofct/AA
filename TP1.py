@@ -46,7 +46,7 @@ def compare(filename): #filename vai ser Tp1_data.csv
         LogScore, bestC, LogPred = Logistic(Kf, X_r, Y_r, X_t, Y_t)
         print("LogisticScore, bestC", LogScore, bestC)
     if nb:
-        NBScore, bestBandwidth=NaiveBayes(Kf, X_r, Y_r, X_t, Y_t)
+a        NBScore, bestBandwidth=NaiveBayes(Kf, X_r, Y_r, X_t, Y_t)
         print("NBScore, bestBandwidth", NBScore, bestBandwidth)
     #MCNmarKnn_Log=MCNmar(KnnPred, LogPred, Y_t) #(|e01-e10|-1)²/e01+e10
     #MCNmarNB_Log=MCNmar(NBPred, LogPred, Y_t)
@@ -79,4 +79,3 @@ def compare(filename): #filename vai ser Tp1_data.csv
     
     
     
->>>>>>> 4570b34cf7a3580897eda3ea14dab8180d480271

@@ -13,44 +13,28 @@ from math import log
 from sklearn.cross_validation import cross_val_score
 from sklearn.metrics import accuracy_score
 from sklearn.neighbors.kde import KernelDensity
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import StratifiedKFold
 
 
-def separateByClass(X, Y):
-	separated = {}
-	for i in range(len(X)):
-		if (Y[i] not in separated):
-			separated[Y[i]] = []
-		separated[Y[i]].append(X[i])
-	return separated
+	
 
-def classify(real_r,real_log,fake_r,fake_log,feat_mat, reg):
-    classes = np.zeros(len(feat_mat))
-    for row in range(len(feat_mat)):
-        reg.fit(real_r)
-        real_sum = real_log + reg.score(feat_mat)
-        reg.fit(fake_r)
-        fake_sum = fake_log + reg.score(feat_mat)
-        if(real_sum < fake_sum):
-            classes[row]= 1
-    return classes
+
         
 def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
-    separated_r = separateByClass(X_r,Y_r);
-    separated_t = separateByClass(X_t,Y_t);
-    real_r = separated_r[0]
-    fake_r = separated_r[1]
-    real_t = separated_t[0]
-    fake_t = separated_t[1]
+
+    real_r = X_r[Y_r ==0]
+    fake_r = X_r[Y_r ==1]
+    real_t = X_r[Y_r ==0]
+    fake_t = X_r[Y_r ==1]
+    kf = StratifiedKFold
     best_bandwidth=1
     best_score = 0
     bandwidth = 20
     tot_len = len(real_r)+len(fake_r)
     real_log = np.log(len(real_r)/tot_len)
     fake_log = np.log(len(fake_r)/tot_len)
-    print(real_r[:])
-    for band in range(1,100,2):
-         reg=KernelDensity(kernel='gaussian', bandwidth=band/100)
+    #for band in range(1,100,2):
+         #reg=KernelDensity(kernel='gaussian', bandwidth=band/100)
          #c_real = classify(real_r,real_log,fake_r, fake_log, real_t,reg)
          #c_fake = classify(real_r,real_log,fake_r, fake_log, fake_t,reg)
          #errors = sum(c_real)+sum(1-c_fake)
@@ -72,7 +56,7 @@ def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
     plt.close()
     reg=KernelDensity(kernel='gaussian', bandwidth=best_bandwidth/100); reg.fit(X_r,Y_r)
     return 1-reg.score(X_t, Y_t), best_bandwidth/100
-   """
+    """
     return 0, 0
 
         
