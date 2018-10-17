@@ -11,15 +11,10 @@ import matplotlib.pyplot as plt
 from Logistic import Logistic
 from KNN import Knn
 from NaiveBayes import NaiveBayes
-from sklearn.linear_model import LogisticRegression
-from math import log
 from sklearn.cross_validation import StratifiedKFold
-from sklearn.cross_validation import cross_val_score
 from sklearn.cross_validation import train_test_split
 from sklearn.utils import shuffle
 #from sklearn.metrics import accuracy_score
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.neighbors.kde import KernelDensity
 def get_data(filename):
     mat = np.loadtxt(filename, delimiter = ',')
     
@@ -33,7 +28,7 @@ def get_data(filename):
     
 def compare(filename): #filename vai ser Tp1_data.csv
     knn = False
-    logistic = False
+    logistic = True
     nb = True
     Xs, Ys = get_data(filename)
     X_r, X_t, Y_r, Y_t = train_test_split(Xs, Ys, test_size = 0.33, stratify = Ys)
@@ -48,6 +43,7 @@ def compare(filename): #filename vai ser Tp1_data.csv
     if nb:
         NBScore, bestBandwidth, NBPred=  NaiveBayes(Kf, X_r, Y_r, X_t, Y_t)
         print("NBScore, bestBandwidth", NBScore, bestBandwidth)
+    return NBScore
     #MCNmarKnn_Log=MCNmar(KnnPred, LogPred, Y_t) #(|e01-e10|-1)²/e01+e10
     #MCNmarNB_Log=MCNmar(NBPred, LogPred, Y_t)
     #MCNmarNB_Knn=MCNmar(NBPred, KnnPred, Y_t)

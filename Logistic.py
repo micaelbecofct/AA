@@ -36,7 +36,6 @@ def Logistic(Kf, X_r, Y_r, X_t, Y_t):
         errs.append(va_err)
         Cs.append(log(C))
         C*=2
-        print(va_err)
     errs = np.array(errs)
     Cs = np.array(Cs)
     fig = plt.figure(figsize=(8,8),frameon=False)
