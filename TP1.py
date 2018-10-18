@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Oct  3 08:09:21 2018
-
 @author: Micael Beco
 @author: Gabriel Baptista
 """
 import numpy as np
-import matplotlib.pyplot as plt
 from Logistic import Logistic
 from KNN import Knn
 from NaiveBayes import NaiveBayes
@@ -27,7 +24,7 @@ def get_data(filename):
     return Xs, Ys
     
 def compare(filename): #filename vai ser Tp1_data.csv
-    knn = False
+    knn = True
     logistic = True
     nb = True
     Xs, Ys = get_data(filename)
@@ -44,11 +41,11 @@ def compare(filename): #filename vai ser Tp1_data.csv
         NBScore, bestBandwidth, NBPred=  NaiveBayes(Kf, X_r, Y_r, X_t, Y_t)
         print("NBScore, bestBandwidth", NBScore, bestBandwidth)
     MCNmarKnn_Log=MCNmar(KnnPred, LogPred, Y_t) #(|e01-e10|-1)²/e01+e10
-    MCNmarNB_Log=MCNmar(NBPred, LogPred, Y_t)
-    MCNmarNB_Knn=MCNmar(NBPred, KnnPred, Y_t)
+    MCNmarNB_Log=MCNmar(NBPred,LogPred, Y_t)
+    MCNmarNB_Knn=MCNmar(KnnPred,NBPred, Y_t)
     print("MCNmarKnn_Log", MCNmarKnn_Log)
-    print("MCNmarKnn_Log", MCNmarNB_Log)
-    print("MCNmarKnn_Log", MCNmarNB_Knn)
+    print("MCNmarKB_Log", MCNmarNB_Log)
+    print("MCNmarKB_Knn", MCNmarNB_Knn)
       
     
     

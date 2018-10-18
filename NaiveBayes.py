@@ -1,17 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Oct  3 08:09:21 2018
-
 @author: Micael Beco
 @author: Gabriel Baptista
 """
 import numpy as np
 import matplotlib.pyplot as plt
 
-from math import log
 from sklearn.cross_validation import cross_val_score
-from sklearn.metrics import accuracy_score
 from sklearn.neighbors.kde import KernelDensity
 from sklearn.base import BaseEstimator
 
