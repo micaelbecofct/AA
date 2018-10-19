@@ -33,13 +33,13 @@ def compare(filename): #filename vai ser Tp1_data.csv
     Kf = StratifiedKFold(Y_r, n_folds = folds)
     if knn:
         KnnErr, bestN, KnnPred = Knn(Kf, X_r, Y_r, X_t, Y_t) #KnnPred AA-07
-        print("KnnErr, bestN", KnnErr, bestN)
+        print("KnnErr:", KnnErr, "bestN:",  bestN)
     if logistic:
         LogScore, bestC, LogPred = Logistic(Kf, X_r, Y_r, X_t, Y_t)
-        print("LogisticScore, bestC", LogScore, bestC)
+        print("LogisticScore:", LogScore, "bestC:", bestC)
     if nb:
         NBScore, bestBandwidth, NBPred=  NaiveBayes(Kf, X_r, Y_r, X_t, Y_t)
-        print("NBScore, bestBandwidth", NBScore, bestBandwidth)
+        print("NBScore:", NBScore, "bestBandwidth:", bestBandwidth)
     MCNmarKnn_Log=MCNmar(KnnPred, LogPred, Y_t) #(|e01-e10|-1)²/e01+e10
     MCNmarNB_Log=MCNmar(NBPred,LogPred, Y_t)
     MCNmarNB_Knn=MCNmar(KnnPred,NBPred, Y_t)
@@ -58,24 +58,3 @@ def MCNmar(PredA, PredB,y):
     NTaFb = sum(TrueA*FalseB)
     NTbFa = sum(TrueB*FalseA)
     return ((abs(NTaFb-NTbFa)-1)**2)*1.0/(NTaFb+NTbFa)
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
