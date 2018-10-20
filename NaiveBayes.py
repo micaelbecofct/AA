@@ -25,8 +25,8 @@ class NaiveBayes_kde(BaseEstimator):
             logs[i] = np.log(classes[i].shape[0]/float(X.shape[0]))
         return classes, logs
         
-    def fit(self, X, Y, sample_weight=None, corrector=None):
-        self.corrector = corrector
+    def fit(self, X, Y, condition=None):
+        self.condition = condition
         classes, self.logs = self.separeteByclass(X,Y)
         self.kdes = {}
         for feature in range(X.shape[1]):
@@ -36,15 +36,7 @@ class NaiveBayes_kde(BaseEstimator):
                 self.kdes[feature][c].fit(classes[c][:,[feature]])
        
     def score(self, X, y):
-        p = {}
-        for c in self.logs:
-            p[c] = np.ones(X.shape[0])* self.logs[c]
-       
-        for feature in range(X.shape[1]):
-            for c in self.logs:
-                p[c] = p[c] + self.kdes[feature][c].score_samples(X[:,[feature]])
-        pred = np.zeros(X.shape[0])
-        pred[self.corrector(p)] = 1
+        pred = self.predict(X)
         return np.sum(pred==y)/float(len(y))
     
     def predict(self, X):
@@ -56,7 +48,7 @@ class NaiveBayes_kde(BaseEstimator):
             for c in self.logs:
                 p[c] = p[c] + self.kdes[feature][c].score_samples(X[:,[feature]])
         pred = np.zeros(X.shape[0])
-        pred[self.corrector(p)] = 1
+        pred[self.condition(p)] = 1
         return pred
         
 
@@ -66,7 +58,7 @@ def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
     errs=[]
     lowest=100000
     fit_params = {
-    'corrector': corrector}
+    'condition': condition}
     for bw in range(1,100,2):
         kde = NaiveBayes_kde(bw/100)
         scores = cross_val_score(kde, X_r, Y_r, cv=Kf, fit_params=fit_params)
@@ -81,10 +73,10 @@ def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
     plt.show()
     plt.close()
 
-    kde = NaiveBayes_kde(best_bandwidth/100); kde.fit(X_r,Y_r, corrector=corrector)
+    kde = NaiveBayes_kde(best_bandwidth/100); kde.fit(X_r,Y_r, condition=condition)
     return 1-kde.score(X_t,Y_t), best_bandwidth, kde.predict(X_t)
 
-def corrector(p):
+def condition(p):
     return p[1]>p[0]
 
 
