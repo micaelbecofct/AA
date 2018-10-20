@@ -46,8 +46,8 @@ def compare(filename): #filename vai ser Tp1_data.csv
     print()
     print("McNemar:")
     print("MCNemarKnn_Log", MCNemarKnn_Log)
-    print("MCNemarKB_Log", MCNemarNB_Log)
-    print("MCNemarKB_Knn", MCNemarNB_Knn)
+    print("MCNemarNB_Log", MCNemarNB_Log)
+    print("MCNemarNB_Knn", MCNemarNB_Knn)
     
 def MCNemar(PredA, PredB,y):
 
