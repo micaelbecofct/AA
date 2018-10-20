@@ -20,8 +20,14 @@ def Knn(Kf, X_r, Y_r, X_t, Y_t):
             lowest= va_err; Best_n = N
         errs.append(va_err); Ns.append(N); N=N+2
     errs = np.array(errs)
-    plt.figure(figsize=(8,8),frameon=False)
-    plt.plot(Ns, errs,'-',linewidth=3)
+    
+    fig = plt.figure(figsize=(8,8),frameon=False)
+    plt.title('K-Nearest Neighbours') 
+    plt.ylabel('Error')
+    plt.xlabel('Number of Neighbours')
+    plt.plot(Ns, errs,'-',linewidth=3, label='Validation Error')
+    plt.legend()
+    fig.savefig('KNN.png', dpi=300, bbox_inches = 'tight')
     plt.show()
     plt.close()
     reg=KNeighborsClassifier(Best_n); reg.fit(X_r, Y_r)

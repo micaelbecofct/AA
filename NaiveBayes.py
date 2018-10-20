@@ -53,28 +53,34 @@ class NaiveBayes_kde(BaseEstimator):
         
 
 def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
-    best_bandwidth=1
-    bandwidths =[]
+    best_h=1
+    hs =[]
     errs=[]
     lowest=100000
     fit_params = {
     'condition': condition}
-    for bw in range(1,100,2):
-        kde = NaiveBayes_kde(bw/100)
+    for h in range(1,100,2):
+        kde = NaiveBayes_kde(h/100)
         scores = cross_val_score(kde, X_r, Y_r, cv=Kf, fit_params=fit_params)
         va_err = 1-np.mean(scores)
         if va_err < lowest:
             lowest = va_err
-            best_bandwidth = bw
+            best_h = h
         errs.append(va_err)
-        bandwidths.append(bw)
-    plt.figure(figsize=(8,8),frameon=False)
-    plt.plot(bandwidths, errs,'-',linewidth=3)
+        hs.append(h)
+
+    fig = plt.figure(figsize=(8,8),frameon=False)
+    plt.title('Naive Bayes') 
+    plt.ylabel('Error')
+    plt.xlabel('Bandwidths(x100)')
+    plt.plot(hs, errs,'-',linewidth=3,label='Validation Error')
+    plt.legend()
+    fig.savefig('Naive_Bayes.png', dpi=300, bbox_inches = 'tight')
     plt.show()
     plt.close()
 
-    kde = NaiveBayes_kde(best_bandwidth/100); kde.fit(X_r,Y_r, condition=condition)
-    return 1-kde.score(X_t,Y_t), best_bandwidth, kde.predict(X_t)
+    kde = NaiveBayes_kde(best_h/100); kde.fit(X_r,Y_r, condition=condition)
+    return 1-kde.score(X_t,Y_t), best_h, kde.predict(X_t)
 
 def condition(p):
     return p[1]>p[0]

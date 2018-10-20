@@ -24,22 +24,20 @@ def get_data(filename):
     return Xs, Ys
     
 def compare(filename): #filename vai ser Tp1_data.csv
-    knn = True
-    logistic = True
-    nb = True
     Xs, Ys = get_data(filename)
     X_r, X_t, Y_r, Y_t = train_test_split(Xs, Ys, test_size = 0.33, stratify = Ys)
     folds = 5
     Kf = StratifiedKFold(Y_r, n_folds = folds)
-    if knn:
-        KnnErr, bestN, KnnPred = Knn(Kf, X_r, Y_r, X_t, Y_t) #KnnPred AA-07
-        print("KnnErr, bestN", KnnErr, bestN)
-    if logistic:
-        LogScore, bestC, LogPred = Logistic(Kf, X_r, Y_r, X_t, Y_t)
-        print("LogisticScore, bestC", LogScore, bestC)
-    if nb:
-        NBScore, bestBandwidth, NBPred=  NaiveBayes(Kf, X_r, Y_r, X_t, Y_t)
-        print("NBScore, bestBandwidth", NBScore, bestBandwidth)
+    
+    KnnErr, bestN, KnnPred = Knn(Kf, X_r, Y_r, X_t, Y_t) #KnnPred AA-07
+    print("KnnErr, bestN", KnnErr, bestN)
+    
+    LogScore, bestC, LogPred = Logistic(Kf, X_r, Y_r, X_t, Y_t)
+    print("LogisticScore, bestC", LogScore, bestC)
+    
+    NBScore, bestBandwidth, NBPred=  NaiveBayes(Kf, X_r, Y_r, X_t, Y_t)
+    print("NBScore, bestBandwidth", NBScore, bestBandwidth)
+    
     MCNmarKnn_Log=MCNmar(KnnPred, LogPred, Y_t) #(|e01-e10|-1)²/e01+e10
     MCNmarNB_Log=MCNmar(NBPred,LogPred, Y_t)
     MCNmarNB_Knn=MCNmar(KnnPred,NBPred, Y_t)
