@@ -52,7 +52,7 @@ class NaiveBayes_kde(BaseEstimator):
         return pred
         
 
-def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
+def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t, showPlot):
     best_h=1
     hs =[]
     errs=[]
@@ -68,17 +68,16 @@ def NaiveBayes (Kf, X_r, Y_r, X_t, Y_t):
             best_h = h
         errs.append(va_err)
         hs.append(h)
-
-    fig = plt.figure(figsize=(8,8),frameon=False)
-    plt.title('Naive Bayes') 
-    plt.ylabel('Error')
-    plt.xlabel('Bandwidths(x100)')
-    plt.plot(hs, errs,'-',linewidth=3,label='Validation Error')
-    plt.legend()
-    fig.savefig('Naive_Bayes.png', dpi=300, bbox_inches = 'tight')
-    plt.show()
-    plt.close()
-
+    if showPlot:
+        fig = plt.figure(figsize=(8,8),frameon=False)
+        plt.title('Naive Bayes') 
+        plt.ylabel('Error')
+        plt.xlabel('Bandwidths(x100)')
+        plt.plot(hs, errs,'-',linewidth=3,label='Validation Error')
+        plt.legend()
+        fig.savefig('Naive_Bayes.png', dpi=300, bbox_inches = 'tight')
+        plt.show()
+        plt.close()
     kde = NaiveBayes_kde(best_h/100); kde.fit(X_r,Y_r, condition=condition)
     return 1-kde.score(X_t,Y_t), best_h, kde.predict(X_t)
 

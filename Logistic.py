@@ -20,7 +20,7 @@ def calc_validation_error(X,Y, Kf,C=1e12):
     va_err = 1-np.mean(scores)
     return va_err
 
-def Logistic(Kf, X_r, Y_r, X_t, Y_t):
+def Logistic(Kf, X_r, Y_r, X_t, Y_t, showPlot):
     best_C=1
     errs = []
     C=1
@@ -36,16 +36,16 @@ def Logistic(Kf, X_r, Y_r, X_t, Y_t):
         C*=2
     errs = np.array(errs)
     Cs = np.array(Cs)
-    
-    fig = plt.figure(figsize=(8,8),frameon=False)
-    plt.title('Logistic Regression') 
-    plt.ylabel('Error')
-    plt.xlabel('log(C)')
-    plt.plot(Cs,errs,'-',linewidth=3,label='Validation Error')
-    plt.legend()
-    fig.savefig('Logistic.png', dpi=300, bbox_inches = 'tight')
-    plt.show()
-    plt.close()
+    if showPlot:
+        fig = plt.figure(figsize=(8,8),frameon=False)
+        plt.title('Logistic Regression') 
+        plt.ylabel('Error')
+        plt.xlabel('log(C)')
+        plt.plot(Cs,errs,'-',linewidth=3,label='Validation Error')
+        plt.legend()
+        fig.savefig('Logistic.png', dpi=300, bbox_inches = 'tight')
+        plt.show()
+        plt.close()
     reg=LogisticRegression(C=best_C, tol=1e-10); reg.fit(X_r, Y_r)
     return 1-reg.score(X_t, Y_t), best_C, reg.predict(X_t)
     
