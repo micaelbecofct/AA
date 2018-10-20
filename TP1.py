@@ -50,6 +50,7 @@ def compare(filename): #filename vai ser Tp1_data.csv
     print("MCNemarKB_Knn", MCNemarNB_Knn)
     
 def MCNemar(PredA, PredB,y):
+
     TrueA = PredA==y 
     FalseB = PredB !=y
     TrueB = PredB == y
@@ -57,24 +58,3 @@ def MCNemar(PredA, PredB,y):
     NTaFb = sum(TrueA*FalseB)
     NTbFa = sum(TrueB*FalseA)
     return ((abs(NTaFb-NTbFa)-1)**2)*1.0/(NTaFb+NTbFa)
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
