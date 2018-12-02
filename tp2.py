@@ -83,7 +83,9 @@ mapear esta informacao
 def plot_for_dbscan(points):  
     knn = nb.KNeighborsClassifier(n_neighbors=5)
     knn.fit(points, np.zeros(len(points)))
-    
+    for ix in range(1,20):
+        print(ix)
+        neighbors = knn.kneighbors(points[ix])
 
 faults, latitudes, longitudes = get_data("tp2_data.csv")
 points = all_points_to_3d(latitudes, longitudes)
