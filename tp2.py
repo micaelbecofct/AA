@@ -24,7 +24,7 @@ RADIUS = 6371 #raio da terra em km
 def lat_lon_to_3d(lat,lon):
     x = RADIUS * np.cos(lat * np.pi / 180) * np.cos(lon * np.pi / 180)
     y = RADIUS * np.cos(lat * np.pi / 180) * np.cos(lon * np.pi / 180)
-    z = RADIUS * np.sen(lat * np.pi / 180)
+    z = RADIUS * np.sin(lat * np.pi / 180)
     return x,y,z
 
 #guardar latitude, longitude e falha de cada sismo
@@ -45,3 +45,6 @@ def all_points_to_3d(latitudes, longitudes):
     return points
         #fazer matriz com 3 colunas e todos os pontos
 
+faults, latitudes, longitudes = get_data("tp2_data.csv")
+points = all_points_to_3d(latitudes, longitudes)
+print(points[0])
