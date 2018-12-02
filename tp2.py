@@ -57,16 +57,15 @@ def k_means_cluster(points):
     print("started clustering with k-means")
     for ix in range(80,100):#ha 90 falhas
         clustering = cl.KMeans(n_clusters = ix).fit(points)
-        print((ix + 1) - 80,"clusterings out of 20 made, ",
-              clustering.n_iter_,"iterations this time")
+        print(((ix + 1) - 80),"/20 clusterings, ",clustering.n_iter_,"iterations this time")
         clustering_labels.append(clustering.labels_)
     return clustering_labels
     
 faults, latitudes, longitudes = get_data("tp2_data.csv")
 points = all_points_to_3d(latitudes, longitudes)
+print("points[5] :",points[5])
 labels = k_means_cluster(points)
-
-
+print("labels[5] :",labels[5])
 
 
 
