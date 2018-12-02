@@ -12,6 +12,7 @@ def plot_classes(labels,lon,lat, alpha=0.5, edge = 'k'):
     """Plot seismic events using Mollweide projection.
     Arguments are the cluster labels and the longitude and latitude
     vectors of the events"""
+    print("\nplotting classes\n")
     img = mat.pyplot.imread("Mollweide_projection_SW.jpg")        
     mat.pyplot.figure(figsize=(10,5),frameon=False)    
     x = lon/180*np.pi

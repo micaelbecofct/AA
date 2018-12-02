@@ -61,11 +61,33 @@ def k_means_cluster(points):
         print(((ix + 1) - 80),"/20 clusterings, ",clustering.n_iter_,"iterations this time")
         clustering_labels.append(clustering.labels_)
     return clustering_labels
+
+#devolve array com clusterings para cada num de componentes gaussianos
+def gauss_mm(points):
+    clustering_labels = [];
+    print("started clustering with Gaussian Mixture Models")
+    for ix in range(80,100):#ha 90 falhas
+        clustering = mx.GaussianMixture(n_components = ix).fit(points)
+        clustering_labels.append(clustering.predict(points))
+        print(((ix + 1) - 80),"/20 clusterings, ",clustering.n_iter_,"iterations this time")
+    return clustering_labels
     
-faults, latitudes, longitudes = get_data("tp2_data.csv")
-points = all_points_to_3d(latitudes, longitudes)
-#print("points[5] :",points[5])
-labels = k_means_cluster(points)
-#print("labels[9] :",labels[9])
-plot_classes(labels[1],longitudes,latitudes)
+#faults, latitudes, longitudes = get_data("tp2_data.csv")
+#points = all_points_to_3d(latitudes, longitudes)
+#print("points[5]: ",points[5])
+#kmeans = k_means_cluster(points)
+#print("labels[9]: ",labels[9])
+#plot_classes(kmeans[1],longitudes,latitudes)
+#gaussian = gauss_mm(points)
+#print("gaussian[0]: ",gaussian[0])
+#plot_classes(gaussian[0],longitudes,latitudes)
+
+
+
+
+
+
+
+
+
 
