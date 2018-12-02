@@ -6,6 +6,7 @@ Micael Beco 48159
 """
 
 import matplotlib as mat
+import numpy as np
 
 def plot_classes(labels,lon,lat, alpha=0.5, edge = 'k'):
     """Plot seismic events using Mollweide projection.

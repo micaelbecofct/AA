@@ -13,6 +13,14 @@ plano:
 4.1 - mapear cada ponto a sua distancia ao 4o vizinho mais proximo
 4.2 - minPts vai ser numero de vizinhos no "cotovelo" do grafico(sempre 4?)
 4.3 - epsilon vai ser distancia do "cotovelo" ao 4o vizinho
+
+Internal
+    silhouette score
+External
+    rand index
+    precision
+    recall
+    f1 measure
 """
 
 import pandas as pd
@@ -40,11 +48,27 @@ def all_points_to_3d(latitudes, longitudes):
     points = []
     for ix in range(len(latitudes)):
         x,y,z = lat_lon_to_3d(latitudes[ix],longitudes[ix])
-        curr = [x,y,z]
-        points.append(curr)
+        points.append([x,y,z])
     return points
-        #fazer matriz com 3 colunas e todos os pontos
 
+def k_means_cluster(points):
+    for ix in range(60,180):#ha 90 falhas        
+        clustering = cl.KMeans(n_clusters = 10).fit(points)
+        #
+    
+    
 faults, latitudes, longitudes = get_data("tp2_data.csv")
 points = all_points_to_3d(latitudes, longitudes)
-print(points[0])
+print("\npoints[5]: ",points[5],"\n")
+k_means_cluster(points)
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
