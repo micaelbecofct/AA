@@ -51,11 +51,13 @@ def all_points_to_3d(latitudes, longitudes):
         points.append([x,y,z])
     return points
 
+#devolve array com clusterings para cada num de clusters
 def k_means_cluster(points):
+    clustering_labels = [];
     for ix in range(60,180):#ha 90 falhas        
         clustering = cl.KMeans(n_clusters = 10).fit(points)
-        #
-    
+        clustering_labels.append(clustering.labels_)
+    return clustering_labels
     
 faults, latitudes, longitudes = get_data("tp2_data.csv")
 points = all_points_to_3d(latitudes, longitudes)
@@ -63,12 +65,14 @@ print("\npoints[5]: ",points[5],"\n")
 k_means_cluster(points)
 
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
