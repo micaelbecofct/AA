@@ -26,6 +26,7 @@ External
 import pandas as pd
 import numpy as np
 from sklearn import cluster as cl
+from sklearn import mixture as mx
 from plotClasses import plot_classes
 RADIUS = 6371 #raio da terra em km
 
@@ -63,17 +64,8 @@ def k_means_cluster(points):
     
 faults, latitudes, longitudes = get_data("tp2_data.csv")
 points = all_points_to_3d(latitudes, longitudes)
-print("points[5] :",points[5])
+#print("points[5] :",points[5])
 labels = k_means_cluster(points)
-print("labels[5] :",labels[5])
-
-
-
-
-
-
-
-
-
-
+#print("labels[9] :",labels[9])
+plot_classes(labels[1],longitudes,latitudes)
 
