@@ -73,26 +73,20 @@ def gauss_mm(points):
 		print(((ix + 1) - 80),"/20 clusterings, ",clustering.n_iter_,"iterations this time")
 	return clustering_labels
 
-"""
-passar pontos a kneighbors e fazer fit
-para cada ponto, saber 4 mais proximos
-com truque de array saber o 4o mais proximo
-mapear esta informacao
-"""
-
 def plot_for_dbscan(points):  
     knn = nb.KNeighborsClassifier(n_neighbors=5)
     knn.fit(points, np.zeros(len(points)))
-    for ix in range(1,20):
-        print(ix)
-        neighbors = knn.kneighbors(points[ix])
+    for ix in range(1,2):
+        neighbors = knn.kneighbors([points[ix]])
+        print(neighbors)
+
 
 faults, latitudes, longitudes = get_data("tp2_data.csv")
 points = all_points_to_3d(latitudes, longitudes)
-#print("points[5]: ",points[5])
+print("points[5]: ",points[5],"\n")
 #kmeans = k_means_cluster(points)
 #print("labels[9]: ",labels[9])
-#plot_classes(kmeans[1],longitudes,latitudes)
+#plot_classes(kmeans[0],longitudes,latitudes)
 #gaussian = gauss_mm(points)
 #print("gaussian[0]: ",gaussian[0])
 #plot_classes(gaussian[0],longitudes,latitudes)
