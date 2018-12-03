@@ -78,8 +78,8 @@ def plot_for_dbscan(points):
     knn = nb.KNeighborsClassifier(n_neighbors=4)
     knn.fit(points, np.zeros(len(points)))
     for ix in range(len(points)):
-        dists = knn.kneighbors([points[ix]],n_neighbors=4)[0]
-        dists.append(dists)
+        curr = knn.kneighbors([points[ix]],n_neighbors=4)[0]
+        dists.append(curr)
     
 faults, latitudes, longitudes = get_data("tp2_data.csv")
 points = all_points_to_3d(latitudes, longitudes)
@@ -91,3 +91,31 @@ print("points[5]: ",points[5],"\n")
 #print("gaussian[0]: ",gaussian[0])
 #plot_classes(gaussian[0],longitudes,latitudes)
 plot_for_dbscan(points)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
