@@ -73,14 +73,14 @@ def gauss_mm(points):
 		print(((ix + 1) - 80),"/20 clusterings, ",clustering.n_iter_,"iterations this time")
 	return clustering_labels
 
-def plot_for_dbscan(points):  
-    knn = nb.KNeighborsClassifier(n_neighbors=5)
+def plot_for_dbscan(points):
+    dists = []
+    knn = nb.KNeighborsClassifier(n_neighbors=4)
     knn.fit(points, np.zeros(len(points)))
-    for ix in range(1,2):
-        neighbors = knn.kneighbors([points[ix]])
-        print(neighbors)
-
-
+    for ix in range(len(points)):
+        dists = knn.kneighbors([points[ix]],n_neighbors=4)[0]
+        dists.append(dists)
+    
 faults, latitudes, longitudes = get_data("tp2_data.csv")
 points = all_points_to_3d(latitudes, longitudes)
 print("points[5]: ",points[5],"\n")
