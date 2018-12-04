@@ -83,7 +83,8 @@ def plot_for_dbscan(points,faults):
         dists.append(curr.item(3))#o kneighbors devolve o array ordenado, a dist mais alta e a ultima
     dists.sort(); dists.reverse()#dists fica ordenado da distancia maior para a mais pequena
     plt.plot(dists,'k,'); plt.show();
-    print("\nEpsilon ideal: ",dists[num_noise(faults)])
+    num_f = num_noise(faults)
+    print("\nEpsilon ideal:",dists[num_f],"\nNum. de sismos sem falha:",num_f)
 
 def num_noise(faults):#devolve o numero de pontos nao associados a uma falha
     count = 0
