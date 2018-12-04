@@ -74,7 +74,7 @@ def gauss_mm(points):
 		print(((ix + 1) - 80),"/20 clusterings, ",clustering.n_iter_,"iterations this time")
 	return clustering_labels
 
-def plot_for_dbscan(points):
+def plot_for_dbscan(points,faults):
     dists = []
     knn = nb.KNeighborsClassifier(n_neighbors=4)
     knn.fit(points, np.zeros(len(points)))
@@ -83,7 +83,7 @@ def plot_for_dbscan(points):
         dists.append(curr.item(3))#o kneighbors devolve o array ordenado, a dist mais alta e a ultima
     dists.sort(); dists.reverse()#dists fica ordenado da distancia maior para a mais pequena
     plt.plot(dists,'k,'); plt.show();
-    return dists
+    print("\nEpsilon ideal: ",dists[num_noise(faults)])
 
 def num_noise(faults):#devolve o numero de pontos nao associados a uma falha
     count = 0
@@ -93,9 +93,8 @@ def num_noise(faults):#devolve o numero de pontos nao associados a uma falha
     return count
     
 faults, latitudes, longitudes = get_data("tp2_data.csv")
-num_noise = num_noise(faults)
-print("num noise: ",num_noise)
-points = all_points_to_3d(latitudes, longitudes)
+points = all_points_to_3d(latitudes,longitudes)
+plot_for_dbscan(points,faults)
 #print("points[5]: ",points[5],"\n")
 #kmeans = k_means_cluster(points)
 #print("labels[9]: ",labels[9])
@@ -103,8 +102,6 @@ points = all_points_to_3d(latitudes, longitudes)
 #gaussian = gauss_mm(points)
 #print("gaussian[0]: ",gaussian[0])
 #plot_classes(gaussian[0],longitudes,latitudes)
-dists = plot_for_dbscan(points)
-print("dists[num_noise]: ",dists[num_noise])
 #print(dists)
 
 
