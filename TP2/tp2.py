@@ -29,6 +29,7 @@ from sklearn import cluster as cl
 from sklearn import mixture as mx
 from sklearn import neighbors as nb
 from plotClasses import plot_classes
+import matplotlib.pyplot as plt
 RADIUS = 6371 #raio da terra em km
 
 def lat_lon_to_3d(lat,lon):
@@ -80,12 +81,14 @@ def plot_for_dbscan(points):
     for ix in range(len(points)):
         curr = knn.kneighbors([points[ix]],n_neighbors=4)[0]
         dists.append(curr.item(3))#o kneighbors devolve o array ordenado, a dist mais alta e a ultima
-    dists.sort(); dists.reverse()
+    dists.sort(); dists.reverse()#dists fica ordenado da distancia maior para a mais pequena
+    xs = np.arange(start = 0,stop = len(points), step = 1)
+    plt.plot(xs,dists,':'); plt.show();
     return dists
     
 faults, latitudes, longitudes = get_data("tp2_data.csv")
 points = all_points_to_3d(latitudes, longitudes)
-print("points[5]: ",points[5],"\n")
+#print("points[5]: ",points[5],"\n")
 #kmeans = k_means_cluster(points)
 #print("labels[9]: ",labels[9])
 #plot_classes(kmeans[0],longitudes,latitudes)
@@ -93,7 +96,7 @@ print("points[5]: ",points[5],"\n")
 #print("gaussian[0]: ",gaussian[0])
 #plot_classes(gaussian[0],longitudes,latitudes)
 dists = plot_for_dbscan(points)
-print(dists)
+#print(dists)
 
 
 
