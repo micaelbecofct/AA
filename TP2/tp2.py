@@ -82,11 +82,19 @@ def plot_for_dbscan(points):
         curr = knn.kneighbors([points[ix]],n_neighbors=4)[0]
         dists.append(curr.item(3))#o kneighbors devolve o array ordenado, a dist mais alta e a ultima
     dists.sort(); dists.reverse()#dists fica ordenado da distancia maior para a mais pequena
-    xs = np.arange(start = 0,stop = len(points), step = 1)
-    plt.plot(xs,dists,':'); plt.show();
+    plt.plot(dists,'k,'); plt.show();
     return dists
+
+def num_noise(faults):#devolve o numero de pontos nao associados a uma falha
+    count = 0
+    for ix in range(1,len(faults)):
+        if(faults[ix] == -1):
+            count = count + 1
+    return count
     
 faults, latitudes, longitudes = get_data("tp2_data.csv")
+num_noise = num_noise(faults)
+print("num noise: ",num_noise)
 points = all_points_to_3d(latitudes, longitudes)
 #print("points[5]: ",points[5],"\n")
 #kmeans = k_means_cluster(points)
@@ -96,6 +104,7 @@ points = all_points_to_3d(latitudes, longitudes)
 #print("gaussian[0]: ",gaussian[0])
 #plot_classes(gaussian[0],longitudes,latitudes)
 dists = plot_for_dbscan(points)
+print("dists[num_noise]: ",dists[num_noise])
 #print(dists)
 
 
