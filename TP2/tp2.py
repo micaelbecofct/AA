@@ -21,9 +21,10 @@ from sklearn import mixture as mx
 from sklearn import neighbors as nb
 from plotClasses import plot_classes
 import matplotlib.pyplot as plt
-from aux import plot_performance, compute_silhouette, compute_rand_indexes
+from myaux import plot_performance, compute_silhouette, compute_rand_indexes
 
 RADIUS = 6371  # raio da terra em km
+EPSILON = 135
 
 def lat_lon_to_3d(lat, lon):
     x = RADIUS * np.cos(lat * np.pi / 180) * np.cos(lon * np.pi / 180)
@@ -58,6 +59,7 @@ def k_means_cluster(points):
     for ix in range(10, 105, 5):  # ha 90 falhas
         clustering = cl.KMeans(n_clusters=ix).fit(points)
         clustering_labels.append(clustering.labels_)
+        print(ix, "clusters, ", clustering.n_iter_, "iterations this time")
         labels.append(ix)
     return labels, clustering_labels
 
@@ -85,7 +87,7 @@ def plot_for_dbscan(points, faults):
         dists.append(curr.item(3))  # o kneighbors devolve o array ordenado, a dist mais alta e a ultima
     dists.sort();
     dists.reverse()  # dists fica ordenado da distancia maior para a mais pequena
-    plt.plot(dists[0:800], 'k,');
+    plt.plot(dists, 'k,');
     plt.show();
     num_f = num_noise(faults)
     print("\nEpsilon ideal:", dists[num_f], "\nNum. de sismos sem falha:", num_f)
@@ -106,39 +108,54 @@ def dbscan_labels(points):
     clustering_labels = []
     print("started clustering with DBSCAN")
     labels = []
-    for ix in range(10, 105, 5):  # ha 90 falhas
+    for ix in range(EPSILON - 50, EPSILON + 100, 5):  # ha 90 falhas
         clustering = cl.DBSCAN(ix).fit(points)
         clustering_labels.append(clustering.labels_)
-        print(ix, "clusters, ")
+        print("Neighbourhood radius: ",ix)
         labels.append(ix)
     return labels, clustering_labels
 
 
 def plot_Kmeans(points, faults):
     labels, kmeans = k_means_cluster(points)
+    print("Computing K-means performance")
     silhouette, precision, recall, rand, f1, adj_rand = compute_silhouette(kmeans, faults, points)
-    plot_performance(labels, "Parameter", "Index Score", "./Kmeans.png", silhouette, precision, recall, rand, f1, adj_rand)
+    print("Plotting K-means performance")
+    plot_performance(labels, "Number of clusters", "Index Score", "./Kmeans.png", 
+                     silhouette, precision, recall, rand, f1, adj_rand)
 
 
 def plot_gauss(points, faults):
     labels, gauss = gauss_mm(points)
+    print("Computing Gaussian components performance")
     silhouette, precision, recall, rand, f1, adj_rand = compute_silhouette(gauss, faults, points)
-    plot_performance(labels, "Parameter", "Index Score", "./Gauss.png", silhouette, precision, recall, rand, f1, adj_rand)
+    print("Plotting Gaussian components performance")
+    plot_performance(labels, "Number of Gaussian components", "Index Score", "./Gauss.png", 
+                     silhouette, precision, recall, rand, f1, adj_rand)
 
 
 def plot_dbscan(points, faults):
     labels, dbscan = dbscan_labels(points)
+    print("Computing DBSCAN performance")
     silhouette, precision, recall, rand, f1, adj_rand = compute_silhouette(dbscan, faults, points)
-    plot_performance(labels, "Parameter", "Index Score", "./DBSCAN.png", silhouette, precision, recall, rand, f1, adj_rand)
+    print("Plotting DBSCAN performance")
+    plot_performance(labels, "Neighbourhood Distance", "Index Score", "./DBSCAN.png", 
+                     silhouette, precision, recall, rand, f1, adj_rand)
 
 
 def show_plots():
     faults, latitudes, longitudes = get_data("tp2_data.csv")
     points = all_points_to_3d(latitudes, longitudes)
-    # plot_Kmeans(points, faults)
-    # plot_gauss(points, faults)
+    plot_Kmeans(points, faults)
+    plot_gauss(points, faults)
     plot_dbscan(points, faults)
-    # plot_for_dbscan(points, faults)
+    plot_for_dbscan(points, faults)
+
+show_plots()
+
+#faults, latitudes, longitudes = get_data("tp2_data.csv")
+#points = all_points_to_3d(latitudes, longitudes)
+#plot_for_dbscan(points, faults)
 
 # plot_classes(kmeans[0], longitudes, latitudes)
 
