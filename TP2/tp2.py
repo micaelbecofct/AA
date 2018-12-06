@@ -4,15 +4,6 @@
 Gabriel Batista 47590
 Micael Beco 48159
 """
-"""
-Internal
-	silhouette score
-External
-	rand index
-	precision
-	recall
-	f1 measure
-"""
 
 import pandas as pd
 import numpy as np
@@ -25,6 +16,7 @@ from myaux import plot_performance, compute_silhouette, compute_rand_indexes
 
 RADIUS = 6371  # raio da terra em km
 EPSILON = 135
+
 
 def lat_lon_to_3d(lat, lon):
     x = RADIUS * np.cos(lat * np.pi / 180) * np.cos(lon * np.pi / 180)
@@ -116,7 +108,7 @@ def dbscan_labels(points):
     return labels, clustering_labels
 
 
-def plot_Kmeans(points, faults):
+def plot_kmeans(points, faults):
     labels, kmeans = k_means_cluster(points)
     print("Computing K-means performance")
     silhouette, precision, recall, rand, f1, adj_rand = compute_silhouette(kmeans, faults, points)
@@ -146,7 +138,7 @@ def plot_dbscan(points, faults):
 def show_plots():
     faults, latitudes, longitudes = get_data("tp2_data.csv")
     points = all_points_to_3d(latitudes, longitudes)
-    plot_Kmeans(points, faults)
+    plot_kmeans(points, faults)
     plot_gauss(points, faults)
     plot_dbscan(points, faults)
     plot_for_dbscan(points, faults)
@@ -158,7 +150,6 @@ show_plots()
 #plot_for_dbscan(points, faults)
 
 # plot_classes(kmeans[0], longitudes, latitudes)
-
 # print("gaussian[0]: ",gaussian[0])
 # plot_classes(gaussian[0],longitudes,latitudes)
 # print(dists)
