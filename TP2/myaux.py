@@ -46,15 +46,12 @@ def compute_rand_indexes(labels, faults):
 
 
 def plot_performance(range, x_label, y_label, filename, silhouette, precision, recall, rand, f1, adj_rand):
-    n_x_values = len(range)
-    x_values_range = np.arange(n_x_values)
-    plt.xticks(x_values_range, range)
-    plt.plot(x_values_range, silhouette, color=[0.8500, 0.3250, 0.0980], linestyle='-', linewidth=1, label="Silhouette Score")
-    plt.plot(x_values_range, rand, color=[0, 0.4470, 0.7410], linestyle='-', linewidth=1, label="Rand Score")
-    plt.plot(x_values_range, precision, color=[0.9290, 0.6940, 0.1250], linestyle='-', linewidth=1, label="Precision")
-    plt.plot(x_values_range, recall, color=[0.4940, 0.1840, 0.5560], linestyle='-', linewidth=1, label="Recall")
-    plt.plot(x_values_range, f1, color=[0.6350, 0.0780, 0.1840], linestyle='-', linewidth=1, label="F1 Score")
-    plt.plot(x_values_range, adj_rand, color=[0.3010, 0.7450, 0.9330], linestyle='-', linewidth=1, label="Adjusted Rand Score")
+    plt.plot(range, silhouette, color=[0.8500, 0.3250, 0.0980], linestyle='-', linewidth=1, label="Silhouette Score")
+    plt.plot(range, rand, color=[0, 0.4470, 0.7410], linestyle='-', linewidth=1, label="Rand Score")
+    plt.plot(range, precision, color=[0.9290, 0.6940, 0.1250], linestyle='-', linewidth=1, label="Precision")
+    plt.plot(range, recall, color=[0.4940, 0.1840, 0.5560], linestyle='-', linewidth=1, label="Recall")
+    plt.plot(range, f1, color=[0.6350, 0.0780, 0.1840], linestyle='-', linewidth=1, label="F1 Score")
+    plt.plot(range, adj_rand, color=[0.3010, 0.7450, 0.9330], linestyle='-', linewidth=1, label="Adjusted Rand Score")
     plt.legend()
     plt.grid()
     plt.xlabel(x_label)
