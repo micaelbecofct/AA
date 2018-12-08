@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def compute_silhouette(labels, faults, points):
+def compute_scores(labels, faults, points):
     print("Computing silhouette scores")
     silhouettes = []
     precisions = []
@@ -17,20 +17,44 @@ def compute_silhouette(labels, faults, points):
     rands = []
     f1s = []
     adj_rands = []
-
+    best_silhouette = [-1, -1]
+    best_precision = [-1, -1]
+    best_recall = [-1, -1]
+    best_rand = [-1, -1]
+    best_f1 = [-1, -1]
+    best_adj_rand = [-1, -1]
+    
     for ix in range(len(labels)):
-        silhouettes.append(silhouette_score(points, labels[ix]))
-        precision, recall, rand, f1, adj_rand = compute_rand_indexes(labels[ix], faults)
+        silhouette = silhouette_score(points, labels[ix])
+        silhouettes.append(silhouette)
+        if best_silhouette[0] < silhouette: 
+            best_silhouette[0] = silhouette
+            best_silhouette[1] = ix
+        precision, recall, rand, f1, adj_rand = compute_ext_indexes(labels[ix], faults)
         precisions.append(precision)
+        if best_precision[0]< precision:
+            best_precision[0] = precision
+            best_precision[1] = ix
         recalls.append(recall)
+        if best_recall[0] < recall :
+            best_recall[0] = recall
+            best_recall[1] = ix
         rands.append(rand)
+        if best_rand[0] < rand : 
+            best_rand[0] = rand
+            best_rand[1] = ix
         f1s.append(f1)
+        if best_f1[0] < f1 :
+            best_f1[0] = f1
+            best_f1[1] = ix
         adj_rands.append(adj_rand)
-    return silhouettes, precisions, recalls, rands, f1s, adj_rands
+        if best_adj_rand[0] < adj_rand : 
+            best_adj_rand[0] = adj_rand
+            best_adj_rand[1]= ix   
+    return silhouettes, precisions, recalls, rands, f1s, adj_rands, best_silhouette, best_precision, best_recall, best_rand, best_f1, best_adj_rand
 
 
-def compute_rand_indexes(labels, faults):
-    print("Computing rand index scores")
+def compute_ext_indexes(labels, faults):
     sf = sc = tp = tn = 0.0
     for ix in range(len(labels)):
         same_fault = faults[ix] == faults[ix + 1:]
