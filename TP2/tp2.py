@@ -43,7 +43,6 @@ def all_points_to_3d(latitudes, longitudes):
     return points
 
 
-# devolve array com clusterings para cada num de clusters
 def k_means_cluster(points, k_clusters_range=range(20, 105)):
     clustering_labels = []
     ks = []
@@ -55,7 +54,6 @@ def k_means_cluster(points, k_clusters_range=range(20, 105)):
     return ks, clustering_labels
 
 
-# devolve array com clusterings para cada num de componentes gaussianos
 def gauss_mm(points, c_components_range=range(20, 105)):
     clustering_labels = []
     cs = []
@@ -78,7 +76,6 @@ def dbscan_labels(points, epsilon_range=range(EPSILON - 50, EPSILON + 100)):
     return es, clustering_labels
 
 
-# devolve o epsilon ideal para o dbscan
 def plot_for_dbscan(points, faults):
     dists = []
     knn = nb.KNeighborsClassifier(n_neighbors=4)
@@ -102,8 +99,6 @@ def num_noise(faults):
             count = count + 1
     return count
 
-
-# devolve array com clusterings para cada num de componentes gaussianos
 
 def plot_kmeans(points, faults):
     ks, kmeans = k_means_cluster(points)
